@@ -2,6 +2,8 @@
 # Completely rewritten to prompt user for file to process and save to a new or existing file
 # Integrated ttkbootstrap for a more modern look
 
+# This script is a simple GUI for editing TOML files.  It allows the user to select a TOML file, edit the settings, and save the changes to the same or a new file.
+
 import os
 import sys
 from tkinter import *
@@ -12,7 +14,7 @@ from ttkbootstrap.constants import *
 import toml, json
 
 # Global Variables
-title = "Benchmark Configuration Editor"
+title = "TOML Configuration Editor"
 toml_path = ""
 config = {}
 fields = {}
@@ -30,7 +32,10 @@ def process_file():
             config = json.load(f)
 
     # Clear the help text
-    #help_frame.destroy()
+    help_frame.destroy()
+    
+    print(f"config: {config}")
+    print(f"fields: {fields}")
     
     # Put the fields on the screen
     render_settings(config, fields, inner_frame)
@@ -155,12 +160,6 @@ def new_settings():
         
     clear_interframe()
 
-def process_all_files():
-    return
-
-def process_this_configuration():
-    return
-
 def clear_parameters():
     return
 
@@ -198,9 +197,6 @@ menu_bar = Menubutton ( root, text="Menu" )
 menu_bar.menu = Menu ( menu_bar, tearoff = 0 )
 menu_bar["menu"] = menu_bar.menu
 menu_bar.menu.add_command (label="Select File", command=process_file)
-menu_bar.menu.add_command (label="Process all TOML configurations", command=process_all_files)
-menu_bar.menu.add_command (label="Process This Configuration", command=process_this_configuration)
-menu_bar.menu.add_command (label="Process This Configuration", command=clear_parameters)
 menu_bar.menu.add_command (label="Exit", command=root.quit)
 menu_bar.pack(fill="x")
 
@@ -231,17 +227,14 @@ scrollbar.pack(side="right", fill="y")
 
 # Add some help to the startup screen
 help_text = """
-Welcome to the Benchmark Configuration Editor.  \n\nTo get started, click on the "Select File" option in the menu above.  This will allow you to select a TOML file to edit.  Once you have selected a file, you can make changes to the settings and then click the "Update Above Configuration" button to save your changes.  If you want to save the changes to a new file, enter the new file name in the "New File Path" field and click the "New Configuration using the above path" button.  You can also use the "File" menu to process all TOML configurations in a directory, process the current configuration, or clear the parameters.  Enjoy!
+Welcome to the TOML Configuration Editor.  \n\nTo get started, click on the "Select File" option in the menu above.  This will allow you to select a TOML file to edit.  Once you have selected a file, you can make changes to the settings and then click the "Update Above Configuration" button to save your changes.  If you want to save the changes to a new file, enter the new file name in the "New File Path" field and click the "New Configuration using the above path" button.  \n\n Enjoy!
 """
 
-interframe_width = inner_frame.winfo_width()
-print (f"interframe width: {interframe_width}")
+help_frame = Frame(inner_frame, width=800, height=600)
+help_frame.grid(sticky="nsew", padx=100, pady=100)
 
-help_frame = Frame(inner_frame, width=100, height=100)
-#help_frame.pack(side="top", fill="both", expand=True, padx=50, pady=50)
-
-help_label = Label(help_frame, text=help_text, wraplength=800, justify="center", font=("Arial", 16))
-#help_label.pack(pady=10, padx=10)
+help_label = Label(help_frame, text=help_text, wraplength=700, justify="center", font=("Arial", 16))
+help_label.pack(pady=10, padx=10)
 
 # Create a frame to hold the save buttons
 button_frame = Frame(frame)
